@@ -7,7 +7,9 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .serializers import (
     SubjectsSerializer,
     TestSerializer,
-    TestPostSerializer
+    TestPostSerializer,
+    AnswerSerializer,
+    AnswerPostSerializer
 )
 from rest_framework import viewsets, generics, status, permissions
 from .permissions import (
@@ -32,3 +34,14 @@ class TestViewSet(viewsets.ModelViewSet, CreateViewSetMixin):
     search_fields = ['id', 'body', 'level', 'subject']
     filter_backends = (SearchFilter, DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['subject',]
+
+
+class AnswerViewSet(CreateViewSetMixin, viewsets.ModelViewSet):
+    queryset = Answers.objects.all()
+    model = Answers
+    serializer_class = AnswerSerializer
+    serializer_post_class = AnswerPostSerializer
+    search_fields = ['id', 'is_correct']
+    filter_backends = (SearchFilter, DjangoFilterBackend, OrderingFilter)
+    filterset_fields = ['is_correct',]
+

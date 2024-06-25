@@ -16,7 +16,7 @@ class Tests(models.Model):
         (0, 'difficult'),
         (1, 'easy')
     )
-    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='subjects')
+    subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='subject')
     level = models.IntegerField(choices=UNIT, default=1)
     body = models.CharField(max_length=225)
 
@@ -25,7 +25,7 @@ class Tests(models.Model):
 
     class Meta:
         verbose_name_plural = 'Tests'
-        ordering = ('id', 'level')
+        # ordering = ('id', 'level')
 
 
 class Answers(models.Model):

@@ -22,4 +22,5 @@ class CreateViewSetMixin:
         obj_id = super().create(request, *args, **kwargs).data.get('id')
         obj = get_object_or_404(self.get_model(), id=obj_id)
         serializer = self.serializer_class(obj)
+        print(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

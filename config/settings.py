@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +52,6 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     "corsheaders",
-
 
 
     'apps.account',
@@ -155,7 +155,7 @@ LOCALE_PATHS = [
 
 
 MODELTRANSLATION_TRANSLATION_FILES = (
-    'apps.product.translations',
+    'apps.subjects.translations',
 )
 
 # Static files (CSS, JavaScript, Images)

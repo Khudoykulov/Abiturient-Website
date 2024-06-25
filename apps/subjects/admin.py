@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Subjects, Answers, Tests
-# Register your models here.
+from modeltranslation.admin import TranslationAdmin
 
 
 @admin.register(Subjects)
-class Subjects(admin.ModelAdmin):
+class Subjects(TranslationAdmin):
     list_display = ('id', 'name',)
     search_fields = ('name',)
 

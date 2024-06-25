@@ -20,9 +20,23 @@ class TestSerializer(serializers.ModelSerializer):
 
 
 class TestPostSerializer(serializers.ModelSerializer):
-    subject = SubjectsSerializer(read_only=True)
 
     class Meta:
         model = Tests
         fields = ['id', 'subject', 'level', 'body']
-        read_only_fields = ['subject']
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    test = TestSerializer(read_only=True)
+
+    class Meta:
+        model = Answers
+        fields = ['id', 'test', 'body', 'is_correct']
+        read_only_fields = ['test']
+
+
+class AnswerPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Answers
+        fields = ['id', 'test', 'body', 'is_correct']
