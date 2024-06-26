@@ -41,6 +41,7 @@ class AnswerViewSet(CreateViewSetMixin, viewsets.ModelViewSet):
     model = Answers
     serializer_class = AnswerSerializer
     serializer_post_class = AnswerPostSerializer
+    # permission_classes = [IsAdminOrReadOnly]
     search_fields = ['id', 'is_correct']
     filter_backends = (SearchFilter, DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['is_correct',]
