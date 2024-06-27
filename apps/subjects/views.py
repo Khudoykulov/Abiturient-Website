@@ -25,7 +25,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
     search_fields = ['id', 'name']
 
 
-class TestViewSet(viewsets.ModelViewSet, CreateViewSetMixin):
+class TestViewSet(CreateViewSetMixin, viewsets.ModelViewSet,):
     queryset = Tests.objects.all()
     model = Tests
     serializer_class = TestSerializer

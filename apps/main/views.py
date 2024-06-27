@@ -16,8 +16,3 @@ class BalanceView(generics.ListCreateAPIView):
         if user_id:
             return qs.filter(author_id=user_id)
         return qs.none()
-
-    # def sum_balance(self):
-    #     user_id = self.request.user.id
-    #     obj = Portfolio.objects.filter(author_id=user_id)
-    #     print(obj.balance)

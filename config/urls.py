@@ -26,9 +26,12 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
     path('account/', include('apps.account.urls', namespace='account')),
     path('main/', include('apps.main.urls', namespace='main')),
     path('subject/', include('apps.subjects.urls', namespace='subject')),
+    path('quiz/', include('apps.quiz.urls', namespace='quiz'))
+
 ]
 
 if settings.DEBUG:

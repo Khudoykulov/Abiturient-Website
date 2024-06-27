@@ -29,12 +29,12 @@ class Tests(models.Model):
 
 
 class Answers(models.Model):
-    test = models.ForeignKey(Tests, on_delete=models.CASCADE)
+    test = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='test_option')
     body = models.CharField(max_length=225)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.body} {self.is_correct}'
+        return f'{self.body}'
 
     class Meta:
         verbose_name_plural = 'Answers'
