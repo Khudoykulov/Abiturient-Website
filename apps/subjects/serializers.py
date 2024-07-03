@@ -11,11 +11,11 @@ class SubjectsSerializer(serializers.ModelSerializer):
 
 
 class TestSerializer(serializers.ModelSerializer):
-    subject = SubjectsSerializer(read_only=True)
+    # subject = SubjectsSerializer(read_only=True)
 
     class Meta:
         model = Tests
-        fields = ['id', 'subject', 'level', 'body']
+        fields = ['id', 'body']
         read_only_fields = ['subject']
 
 

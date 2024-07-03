@@ -25,11 +25,10 @@ class Tests(models.Model):
 
     class Meta:
         verbose_name_plural = 'Tests'
-        # ordering = ('id', 'level')
 
 
 class Answers(models.Model):
-    test = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='test_option')
+    test = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='tests')
     body = models.CharField(max_length=225)
     is_correct = models.BooleanField(default=False)
 

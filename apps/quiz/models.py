@@ -16,3 +16,14 @@ class SecondSubject(models.Model):
         return f'{self.second_subject}'
 
 
+class BlockTest(models.Model):
+    # subject/{subject_id}/test/test_id/answer/answer_id
+    first = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='first')
+    second = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='second')
+    test = models.ForeignKey(Tests, on_delete=models.SET_NULL, related_name='test', null=True, blank=True)
+    answer = models.ForeignKey(Answers, on_delete=models.SET_NULL, related_name='answer', null=True, blank=True)
+    is_answer = models.BooleanField()
+
+
+
+

@@ -2,14 +2,15 @@ from rest_framework import viewsets, generics, status
 from apps.subjects.permissions import IsAuthor
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from apps.subjects.models import Subjects
+from apps.subjects.models import Subjects, Tests, Answers
 from apps.subjects.mixins import CreateViewSetMixin
 from rest_framework import generics, viewsets
 from .serializers import (
     FirstSubjectSerializer,
-    SecondSubjectSerializer
+    SecondSubjectSerializer,
+    BlockSubjectSerializer
 )
-from .models import SecondSubject, FirstSubject
+from .models import SecondSubject, FirstSubject, BlockTest
 
 
 class FirstSubjectViewAPI(generics.GenericAPIView):
@@ -61,9 +62,6 @@ class SecondSubjectViewAPI(generics.GenericAPIView):
             second_id = first_id-1
         get_object_or_404(Subjects, id=second_subject_id)
         first_subject_id = get_object_or_404(Subjects, name=FirstSubject.objects.order_by('-id').first()).id
-
-        print(first_subject_id)
-        print(second_subject_id)
         if second_id == first_id-1:
             if second_subject_id == first_subject_id:
                 return Response({'detail': 'bu fanni birinchi blokga tanlagansz '})
@@ -71,12 +69,20 @@ class SecondSubjectViewAPI(generics.GenericAPIView):
             return Response({'detail': 'First Subjects create '})
         return Response({'detail': 'oldin birinchi blockni tanlang  '})
 
+
+class BlockTestViewAPI(generics.ListCreateAPIView):
+    queryset = Tests.objects.all()
+    serializer_class = BlockSubjectSerializer
+
+    def get_serializer_context(self):
+        ctx = super().get_serializer_context()
+        first_id = self.kwargs.get('first_id')
+        ctx['first_id'] = first_id
+        return ctx
+
     def get_queryset(self):
-        first_id = FirstSubject.objects.latest('id').id
-        print(first_id)
+        first_id = self.kwargs.get('first_id')
         qs = super().get_queryset()
         if first_id:
-            return qs.pop(first_id)
+            return qs.filter(subject_id=first_id)
         return qs.none()
-
-
