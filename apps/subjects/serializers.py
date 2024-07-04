@@ -40,3 +40,20 @@ class AnswerPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answers
         fields = ['id', 'test', 'body', 'is_correct']
+
+
+class AnswerQuizSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    class Meta:
+        model = Answers
+        fields = ['id',]
+
+
+class TestQuizSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    answer = AnswerQuizSerializer()
+
+    class Meta:
+        model = Tests
+        fields = ['id', 'answer']

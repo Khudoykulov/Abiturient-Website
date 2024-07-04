@@ -8,7 +8,9 @@ from rest_framework import generics, viewsets
 from .serializers import (
     FirstSubjectSerializer,
     SecondSubjectSerializer,
-    BlockSubjectSerializer
+    BlockSubjectSerializer,
+    BlockSubjectPostSerializer,
+    BlockPostSubjectSerializer
 )
 from .models import SecondSubject, FirstSubject, BlockTest
 
@@ -69,16 +71,25 @@ class SecondSubjectViewAPI(generics.GenericAPIView):
             return Response({'detail': 'First Subjects create '})
         return Response({'detail': 'oldin birinchi blockni tanlang  '})
 
+    def get_queryset(self):
+        first_id = self.kwargs.get('first_id')
+        qs = super().get_queryset()
+        if first_id:
+            return qs.filter(subject_id=first_id)
+        return qs.none()
+
 
 class BlockTestViewAPI(generics.ListCreateAPIView):
     queryset = Tests.objects.all()
     serializer_class = BlockSubjectSerializer
 
     def get_serializer_context(self):
-        ctx = super().get_serializer_context()
-        first_id = self.kwargs.get('first_id')
-        ctx['first_id'] = first_id
-        return ctx
+        if self.request.method == 'GET':
+            ctx = super().get_serializer_context()
+            first_id = self.kwargs.get('first_id')
+            ctx['first_id'] = first_id
+            return ctx
+        return super().get_serializer_context()
 
     def get_queryset(self):
         first_id = self.kwargs.get('first_id')
@@ -86,3 +97,46 @@ class BlockTestViewAPI(generics.ListCreateAPIView):
         if first_id:
             return qs.filter(subject_id=first_id)
         return qs.none()
+
+    def create(self, request, *args, **kwargs):
+        qs = super().get_queryset()
+        first_id = self.kwargs.get('first_id')
+        if first_id:
+            qs.filter(subject_id=first_id)
+            test = qs(list(self.queryset), 2)
+            print(test)
+
+
+class BlockPostTestViewAPI(generics.CreateAPIView):
+    queryset = Tests.objects.all()
+    serializer_class = BlockSubjectPostSerializer
+
+    def create(self, request, *args, **kwargs):
+        a = request.data
+        print(a)
+        quiz_id = request.data.get('tests')[0].get('id')
+        print(quiz_id)
+        quiz_answer_id = request.data.get('tests')[0].get('id')
+        print(quiz_answer_id)
+        print(request.data.get('answer'))
+        return Response({'detail': 'Added to  liked list'})
+
+
+class BlockPost1111111111TestViewAPI(generics.CreateAPIView):
+    queryset = Tests.objects.all()
+    serializer_class = BlockPostSubjectSerializer
+
+    def create(self, request, *args, **kwargs):
+        qs = Tests.objects.all()
+        test_id = self.request.data.get('test_id')
+        import random
+        if test_id:
+            qs = qs.filter(subject_id=test_id)
+            qs = random.sample(list(qs), 2)
+            print('112321231231222222222222222222222222222222222')
+            print(qs)
+
+            return super().create(qs)
+        return Response({'detail': 'Added to  liked list'})
+
+
