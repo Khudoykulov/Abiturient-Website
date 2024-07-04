@@ -1,12 +1,20 @@
 from django.contrib import admin
-from .models import FirstSubject, SecondSubject
+# from .models import FirstSubject, SecondSubject, TestQuiz
+from .models import TestQuiz
+
+# @admin.register(FirstSubject)
+# class FirstSubject(admin.ModelAdmin):
+#     list_display = ['id', 'first_stage',]
+#
+#
+# @admin.register(SecondSubject)
+# class SecondSubject(admin.ModelAdmin):
+#     list_display = ['id', 'second_subject']
 
 
-@admin.register(FirstSubject)
-class FirstSubject(admin.ModelAdmin):
-    list_display = ['id', 'first_stage',]
-
-
-@admin.register(SecondSubject)
-class SecondSubject(admin.ModelAdmin):
-    list_display = ['id', 'second_subject']
+@admin.register(TestQuiz)
+class TestQuiz(admin.ModelAdmin):
+    list_display = ['id', 'subject_quiz', 'max_point', 'test_count']
+    search_fields = ("subject_quiz__name", 'test_quiz')
+    # autocomplete_fields = ['test_quiz']
+    filter_horizontal = ('test_quiz',)

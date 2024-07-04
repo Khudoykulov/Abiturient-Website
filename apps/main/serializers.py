@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Portfolio
+from .models import Portfolio, MainTest
 from django.core.exceptions import ValidationError
+from apps.quiz.serializers import TestQuizSerializer
 
 
 class BalanceSerializer(serializers.ModelSerializer):
@@ -18,3 +19,17 @@ class BalanceSerializer(serializers.ModelSerializer):
         validated_data['author_id'] = request.user.id
         return super().create(validated_data)
 
+
+class MainTestSerializer(serializers.ModelSerializer):
+    main_test = TestQuizSerializer(read_only=True)
+
+    class Meta:
+        model = MainTest
+        fields = ['id', 'main_test']
+
+
+class MainTestPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MainTest
+        fields = ['id', 'main_test']

@@ -12,7 +12,7 @@ class Subjects(TranslationAdmin):
 @admin.register(Tests)
 class Tests(admin.ModelAdmin):
     list_display = ['id', 'level', 'subject', 'body']
-    search_fields = ['unit', 'subject']
+    search_fields = ['body', 'subject__name', 'level']
 
 
 @admin.register(Answers)

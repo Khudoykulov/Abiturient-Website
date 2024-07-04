@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from .serializers import BalanceSerializer
-from .models import Portfolio
+from apps.subjects.mixins import CreateViewSetMixin
+from .serializers import BalanceSerializer, MainTestSerializer, MainTestPostSerializer
+from .models import Portfolio, MainTest
 from rest_framework import generics, viewsets
 from .permissions import IsAuthor
 
@@ -16,3 +17,14 @@ class BalanceView(generics.ListCreateAPIView):
         if user_id:
             return qs.filter(author_id=user_id)
         return qs.none()
+
+
+# class MainTestAPIView(generics.ListAPIView):
+#     queryset = MainTest.objects.all()
+#     serializer_class = MainTestSerializer
+
+class MainTestAPIView(CreateViewSetMixin, viewsets.ModelViewSet):
+    model = MainTest
+    queryset = MainTest.objects.all()
+    serializer_class = MainTestSerializer
+    serializer_post_class = MainTestPostSerializer

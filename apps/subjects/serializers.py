@@ -1,6 +1,5 @@
 from .models import Tests, Answers, Subjects
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 
 class SubjectsSerializer(serializers.ModelSerializer):
@@ -11,7 +10,6 @@ class SubjectsSerializer(serializers.ModelSerializer):
 
 
 class TestSerializer(serializers.ModelSerializer):
-    # subject = SubjectsSerializer(read_only=True)
 
     class Meta:
         model = Tests
@@ -42,18 +40,23 @@ class AnswerPostSerializer(serializers.ModelSerializer):
         fields = ['id', 'test', 'body', 'is_correct']
 
 
-class AnswerQuizSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+# class AnswerQuizSerializer(serializers.ModelSerializer):
+#     id = serializers.IntegerField()
+#
+#     class Meta:
+#         model = Answers
+#         fields = ['id',]
 
-    class Meta:
-        model = Answers
-        fields = ['id',]
 
-
-class TestQuizSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
-    answer = AnswerQuizSerializer()
+# class TestSubjectSerializer(serializers.ModelSerializer):
+#     id = serializers.IntegerField()
+#
+#     class Meta:
+#         model = Tests
+#         fields = ['id', 'body']
+class TestSubjectSerializer(serializers.ModelSerializer):
+    tests = AnswerSerializer(many=True)
 
     class Meta:
         model = Tests
-        fields = ['id', 'answer']
+        fields = ['id', 'body', 'tests']

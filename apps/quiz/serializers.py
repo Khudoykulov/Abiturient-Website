@@ -1,56 +1,31 @@
 from rest_framework import serializers
-from .models import FirstSubject, SecondSubject, BlockTest
+from .models import (
+    TestQuiz
+
+)
 from apps.subjects.models import Subjects, Tests, Answers
-from apps.subjects.serializers import SubjectsSerializer, TestSerializer, AnswerSerializer, AnswerQuizSerializer, TestQuizSerializer
-from rest_framework.exceptions import ValidationError
+from apps.subjects.serializers import (
+    SubjectsSerializer,
+    TestSubjectSerializer
+
+)
 
 
-class FirstSubjectSerializer(serializers.Serializer):
-    first_subject_id = serializers.IntegerField()
-
-    class Meta:
-        fields = ['first_subject_id']
-
-
-class SecondSubjectSerializer(serializers.Serializer):
-    second_subject_id = serializers.IntegerField()
+class TestQuizSerializer(serializers.ModelSerializer):
+    test_quiz = TestSubjectSerializer(many=True, read_only=True)
+    subject_quiz = SubjectsSerializer(read_only=True)
 
     class Meta:
-        fields = ['second_subject_id']
+        model = TestQuiz
+        fields = ['id', 'subject_quiz', 'test_quiz', 'max_point']
 
 
-class BlockSubjectSerializer(serializers.ModelSerializer):
-    test_id = serializers.IntegerField()
-
-    class Meta:
-        model = Tests
-        fields = ['test_id']
-
-    def create(self, validated_data):
-        first_id = self.context.get('first_id')
-        validated_data['first_id'] = first_id
-        return super().create(validated_data)
-
-
-class BlockPostSubjectSerializer(serializers.ModelSerializer):
-    test_id = serializers.IntegerField()
+class TestQuizPostSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Tests
-        fields = ['test_id']
+        model = TestQuiz
+        fields = ['id', 'subject_quiz', 'test_quiz', 'max_point']
 
 
 
-class BlockSubjectPostSerializer(serializers.ModelSerializer):
-    tests = TestQuizSerializer(many=True,)
 
-    class Meta:
-        model = Tests
-        fields = ['id', 'tests',]
-
-    def create(self, validated_data):
-        subject_id = validated_data.get('subject')
-        a = validated_data.get('test')
-        print(a)
-        print(subject_id)
-        return super().create(validated_data)
