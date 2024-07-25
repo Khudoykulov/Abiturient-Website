@@ -54,9 +54,17 @@ class AnswerPostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Tests
 #         fields = ['id', 'body']
+class AnswerQuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answers
+        fields = ['id', 'body', 'is_correct']
+
+
 class TestSubjectSerializer(serializers.ModelSerializer):
-    tests = AnswerSerializer(many=True)
+    tests = AnswerQuizSerializer(many=True)
 
     class Meta:
         model = Tests
         fields = ['id', 'body', 'tests']
+
+

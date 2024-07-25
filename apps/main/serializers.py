@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from .models import Portfolio, MainTest
+from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock
 from django.core.exceptions import ValidationError
 from apps.quiz.serializers import TestQuizSerializer
-
+from ..quiz.models import TestQuiz
+from ..subjects.serializers import SubjectsSerializer, TestSubjectSerializer
+from apps.subjects.models import Tests, Answers
 
 class BalanceSerializer(serializers.ModelSerializer):
 
@@ -32,4 +34,87 @@ class MainTestPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainTest
+        fields = ['id',]
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+
+class TestQuizAnswerSerializer(serializers.ModelSerializer):
+    subject_quiz = SubjectsSerializer(read_only=True)
+
+    class Meta:
+        model = TestQuiz
+        fields = ['subject_quiz', 'max_point']
+
+
+class MainTestAnswerSerializer(serializers.ModelSerializer):
+    main_test = TestQuizAnswerSerializer(read_only=True)
+
+    class Meta:
+        model = MainTest
         fields = ['id', 'main_test']
+
+
+class MainAnswerQuizSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tests
+        fields = ['id', 'body']
+
+
+class MainAnswerAnswerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Answers
+        fields = ['id', 'body', 'is_correct']
+
+
+class MainAnswerSerializer(serializers.ModelSerializer):
+    quiz = MainAnswerQuizSerializer(read_only=True)
+    answer = MainAnswerAnswerSerializer(read_only=True)
+
+    class Meta:
+        model = MainAnswer
+        fields = ['quiz', 'answer']
+
+
+class MainAnswerBlockSerializer(serializers.ModelSerializer):
+    block = MainTestAnswerSerializer(read_only=True)
+    main = MainAnswerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = MainAnswerBlock
+        fields = ['id', 'block', 'main']
+
+
+class MainAnswerPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MainAnswer
+        fields = ['quiz', 'answer']
+
+    # def create(self, validated_data):
+    #     quiz = validated_data.data.get('quiz')
+    #     answer = validated_data.data.get('answer')
+    #     print(quiz)
+    #     obj = super().create(validated_data)
+    #     return obj
+
+
+class MainAnswerBlockPostSerializer(serializers.ModelSerializer):
+    main = MainAnswerPostSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = MainAnswerBlock
+        fields = ['id', 'block', 'main']
+
+
+
+    # def create(self, validated_data):
+    #     validated_data['main'] = self.context['main']
+    #     obj = super().create(validated_data)
+    #     block = validated_data.get('block')
+    #     print(obj)
+    #     print(block)
+    #     return obj

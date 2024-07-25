@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Portfolio, MainTest
-
+from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock
+from apps.subjects.models import Tests
 
 @admin.register(Portfolio)
 class Portfolio(admin.ModelAdmin):
@@ -9,8 +9,18 @@ class Portfolio(admin.ModelAdmin):
 
 @admin.register(MainTest)
 class MainTestAdmin(admin.ModelAdmin):
-    list_display = ['id', 'main_test']
+    list_display = ['id', 'main_test', 'author']
     # fields = ['main_test']
     search_fields = ('main_test',)
     autocomplete_fields = ('main_test',)
 
+
+class TestInlineAdmin(admin.TabularInline):
+    model = MainAnswer
+    extra = 1
+
+
+@admin.register(MainAnswerBlock)
+class MainAnswerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'block',]
+    inlines = [TestInlineAdmin,]
