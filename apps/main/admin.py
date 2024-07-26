@@ -17,10 +17,10 @@ class MainTestAdmin(admin.ModelAdmin):
 
 class TestInlineAdmin(admin.TabularInline):
     model = MainAnswer
-    extra = 1
+    extra = 0
 
 
 @admin.register(MainAnswerBlock)
 class MainAnswerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'block',]
+    list_display = ['id', 'block', 'correct_count', 'ball']
     inlines = [TestInlineAdmin,]

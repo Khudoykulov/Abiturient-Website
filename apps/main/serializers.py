@@ -12,9 +12,6 @@ class BalanceSerializer(serializers.ModelSerializer):
         model = Portfolio
         fields = ['id', 'balance', 'total_balance',]
 
-    # def validated_data(self):
-    #     if self.balance < 0:
-    #         raise ValidationError('detail', 'promo name is required')
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -92,29 +89,24 @@ class MainAnswerPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainAnswer
-        fields = ['quiz', 'answer']
-
-    # def create(self, validated_data):
-    #     quiz = validated_data.data.get('quiz')
-    #     answer = validated_data.data.get('answer')
-    #     print(quiz)
-    #     obj = super().create(validated_data)
-    #     return obj
+        fields = ['id', 'quiz', 'answer']
 
 
 class MainAnswerBlockPostSerializer(serializers.ModelSerializer):
-    main = MainAnswerPostSerializer(many=True, read_only=True)
+    main = MainAnswerPostSerializer(many=True,)
 
     class Meta:
         model = MainAnswerBlock
         fields = ['id', 'block', 'main']
 
+    def create(self, validated_data):
+        main_data = validated_data.pop('main', [])
+        block = MainAnswerBlock.objects.create(**validated_data)
+        for main_item in main_data:
+            MainAnswer.objects.create(main=block, **main_item)
+        return block
 
 
-    # def create(self, validated_data):
-    #     validated_data['main'] = self.context['main']
-    #     obj = super().create(validated_data)
-    #     block = validated_data.get('block')
-    #     print(obj)
-    #     print(block)
-    #     return obj
+
+
+

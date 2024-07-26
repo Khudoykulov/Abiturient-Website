@@ -2,11 +2,19 @@ import random
 from apps.quiz.models import TestQuiz
 from django.shortcuts import render
 from apps.subjects.mixins import CreateViewSetMixin
-from .serializers import BalanceSerializer, MainTestSerializer, MainTestPostSerializer, MainAnswerSerializer, MainAnswerBlockSerializer, MainAnswerBlockPostSerializer
+from .serializers import (
+    BalanceSerializer,
+    MainTestSerializer,
+    MainTestPostSerializer,
+    MainAnswerBlockSerializer,
+    MainAnswerBlockPostSerializer,
+)
+
 from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock
 from rest_framework import generics, viewsets, status
 from .permissions import IsAuthor
 from rest_framework.response import Response
+
 
 class BalanceView(generics.ListCreateAPIView):
     queryset = Portfolio.objects.all()
@@ -21,22 +29,22 @@ class BalanceView(generics.ListCreateAPIView):
         return qs.none()
 
 
-class MainTestAPIView1(generics.ListCreateAPIView):
-    queryset = MainTest.objects.all()
-    serializer_class = MainTestSerializer
-    serializer_post_class = MainTestPostSerializer
+# class MainTestAPIView1(generics.ListCreateAPIView):
+#     queryset = MainTest.objects.all()
+#     serializer_class = MainTestSerializer
+#     serializer_post_class = MainTestPostSerializer
+#
+#     def get_serializer_class(self):
+#         if self.request.method == 'POST':
+#             return MainTestPostSerializer
+#         return MainTestSerializer
 
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return MainTestPostSerializer
-        return MainTestSerializer
 
-
-class MainTestAPIView(CreateViewSetMixin, viewsets.ModelViewSet):
-    model = MainTest
-    queryset = MainTest.objects.all()
-    serializer_class = MainTestSerializer
-    serializer_post_class = MainTestPostSerializer
+# class MainTestAPIView(CreateViewSetMixin, viewsets.ModelViewSet):
+#     model = MainTest
+#     queryset = MainTest.objects.all()
+#     serializer_class = MainTestSerializer
+#     serializer_post_class = MainTestPostSerializer
 
 
 class MainTestAPIView2(generics.ListCreateAPIView):
@@ -91,45 +99,13 @@ class MainAnswerAPIView(generics.ListCreateAPIView):
             return MainAnswerBlockPostSerializer
         return MainAnswerBlockSerializer
 
-    def get_serializer_context(self):
-        ctx = super().get_serializer_context()
-        ctx['main'] = self.request.data.get('main')
-        return ctx
-
     def create(self, request, *args, **kwargs):
-        block_id = self.request.data.get('block')
-        main_list = request.data.get('main')
-
-        # Data validation
-        if not isinstance(main_list, list):
-            return Response({"error": "Invalid data format. 'main' should be a list."},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        created_instances = []
-        errors = []
-
-        # Iterate through main_list
-        for item in main_list:
-            quiz_id = item.get('quiz')
-            answer_id = item.get('answer')
-
-            # Create and save the MainAnswer instance
-            serializer = self.get_serializer(data={
-                'main': block_id,
-                'quiz': quiz_id,
-                'answer': answer_id
-            })
-
-            if serializer.is_valid():
-                instance = serializer.save()
-                created_instances.append(instance)
-            else:
-                errors.append(serializer.errors)
-
-        if errors:
-            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(MainAnswerSerializer(created_instances, many=True).data, status=status.HTTP_201_CREATED)
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -139,22 +115,3 @@ class MainAnswerAPIView(generics.ListCreateAPIView):
 
 
 
-
-
-
-
-        #
-        # main = self.request.data.get('main')
-        # data = self.request.data
-        # print(block_id)
-        # print(main)
-        # print(data)
-        # serializer = self.serializer_post_class(data=request.data)
-        # if serializer.is_valid():
-        #     for i in main:
-        #         quiz_id = i['quiz']
-        #         answer_id = i['answer']
-        #         print(i['quiz'])
-        #         print(i['answer'])
-        #         serializer.save(block_id=block_id, main__quiz=quiz_id, main__answer=answer_id)
-        # return Response(serializer.data, status=status.HTTP_201_CREATED)

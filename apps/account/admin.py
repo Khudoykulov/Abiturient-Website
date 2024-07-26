@@ -41,5 +41,5 @@ class TokenAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'token',)
 
 
-admin.site.index_title = 'Ecommerce Admin'
-admin.site.site_header = 'Ecommerce Administration'
+admin.site.index_title = 'Abiturient Admin'
+admin.site.site_header = 'Abiturient Administration'

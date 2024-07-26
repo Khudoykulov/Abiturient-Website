@@ -25,7 +25,7 @@ class MainTest(models.Model):
     main_test = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='main_test',)
 
     def __str__(self):
-        return self.main_test.subject_quiz.name
+        return f'{self.main_test.subject_quiz.name} --> {self.id}'
     @property
     def subject_name(self):
         return self.main_test.subject_quiz.name
@@ -34,37 +34,21 @@ class MainTest(models.Model):
 class MainAnswerBlock(models.Model):
     block = models.ForeignKey(MainTest, on_delete=models.CASCADE)
 
+    @property
+    def correct_count(self):
+        answers = self.main.all().values_list('answer__is_correct', flat=True)
+        correct_count = sum(1 for is_correct in answers if is_correct)
+        return correct_count
+
+    def ball(self):
+        return self.correct_count * self.block.main_test.max_point
 
 class MainAnswer(models.Model):
     main = models.ForeignKey(MainAnswerBlock, on_delete=models.CASCADE, related_name='main')
     quiz = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='main_quiz')
     answer = models.ForeignKey(Answers, on_delete=models.CASCADE)
 
-
-
-
-
-
-
-
-
-
-
-
-
-# class MainAnswer(models.Model):
-#     test = models.ManyToManyField(MainTest, related_name='test')
-#     main_test_answer = models.ManyToManyField(Tests, related_name='main_test_answer',)
-
-#     def __str__(self):
-#         return f'{self.test}'
-#
-#
-# class TestQuiz11(models.Model):
-#     Answer = models.ForeignKey(MainAnswer, on_delete=models.CASCADE,)
-#     test_quiz = models.ManyToManyField(Tests, related_name='test_quiz',)
-#     max_point = models.FloatField(default=2.1)
-#
-#     def __str__(self):
-#         return f'{self.max_point}'
-
+    # @property
+    # def ball(self):
+    #     son = self.objects.filter(answer__is_correct=True).count
+    #     return son
