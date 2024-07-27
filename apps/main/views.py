@@ -82,6 +82,12 @@ class MainAnswerAPIView(generics.ListCreateAPIView):
             return MainAnswerBlockPostSerializer
         return MainAnswerBlockSerializer
 
+    def get_serializer_context(self):
+        user = self.request.user
+        ctx = super().get_serializer_context()
+        ctx['user'] = user
+        return ctx
+
     def get_queryset(self):
         queryset = super().get_queryset()
         author_id = self.request.user.id

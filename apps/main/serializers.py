@@ -5,6 +5,7 @@ from apps.quiz.serializers import TestQuizSerializer
 from ..quiz.models import TestQuiz
 from ..subjects.serializers import SubjectsSerializer, TestSubjectSerializer
 from apps.subjects.models import Tests, Answers
+from apps.quiz.models import BlockTestPrice
 
 
 class BalanceSerializer(serializers.ModelSerializer):
@@ -99,6 +100,27 @@ class MainAnswerBlockPostSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         main_data = validated_data.pop('main', [])
         block = MainAnswerBlock.objects.create(**validated_data)
+        user = self.context.get('user')
+        user = user if user else None
+        if user:
+            # Foydalanuvchiga mos `Portfolio` obyektini olish
+            portfolio = Portfolio.objects.filter(author_id=user.id).first()
+            if portfolio:
+                # Balansni olish
+                balance = portfolio.balance
+
+                # `BlockTestPrice` qiymatini olish (birinchi obyekt)
+                block_price = BlockTestPrice.objects.first().price
+
+                # Balansni yangilash
+                if balance >= block_price:
+                    portfolio.balance = balance - block_price
+                    portfolio.save()
+                else:
+                    raise serializers.ValidationError("Balans yetarli emas.")
+            else:
+                raise serializers.ValidationError("Portfolio topilmadi.")
+
         for main_item in main_data:
             MainAnswer.objects.create(main=block, **main_item)
         return block

@@ -42,7 +42,7 @@ class UserVerifySerializer(serializers.Serializer):
                         user.verify_date = datetime.now()
                         UserToken.objects.get(token=token_last.token).is_used = True
                         user.save()
-                    raise ValidationError('Tokennnn')
+                    raise ValidationError('Token send')
                 raise ValidationError('Token already exists')
             raise ValidationError('Passwords do not match')
         raise ValidationError('Email already registered')

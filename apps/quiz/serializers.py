@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.response import Response
+
 from .models import (
     TestQuiz
 
@@ -43,7 +45,6 @@ class BlockTestPostSerializer(serializers.ModelSerializer):
 
         # 1. Tests modelidan kerakli testlarni olish
         filtered_tests = Tests.objects.filter(subject_id=subject_id, level=max_point)
-
         # 2. Tasodifiy 3 ta testni tanlash
         all_tests = list(filtered_tests)
         if len(all_tests) < 3:

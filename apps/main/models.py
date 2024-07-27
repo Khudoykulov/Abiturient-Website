@@ -8,7 +8,7 @@ from apps.subjects.models import Tests, Answers
 
 
 class Portfolio(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='balance')
     balance = models.IntegerField(null=True, blank=True,
                                   validators=[MinValueValidator(0), MaxValueValidator(9999999)])
     @property
@@ -50,8 +50,7 @@ class MainAnswer(models.Model):
     main = models.ForeignKey(MainAnswerBlock, on_delete=models.CASCADE, related_name='main')
     quiz = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='main_quiz')
     answer = models.ForeignKey(Answers, on_delete=models.CASCADE)
+    # modified_date = models.DateTimeField(auto_now=True)
+    # created_date = models.DateTimeField(auto_now_add=True)
 
-    # @property
-    # def ball(self):
-    #     son = self.objects.filter(answer__is_correct=True).count
-    #     return son
+

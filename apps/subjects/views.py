@@ -24,6 +24,7 @@ class TagAPIView(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     permission_classes = [IsAdminOrReadOnly]
 
+
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subjects.objects.all()
     serializer_class = SubjectsSerializer

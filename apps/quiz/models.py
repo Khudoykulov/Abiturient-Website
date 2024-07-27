@@ -14,6 +14,11 @@ class TestQuiz(models.Model):
         return self.test_quiz.count()
 
 
+class BlockTestPrice(models.Model):
+    price = models.IntegerField(max_length=123, default=5000)
+
+    def __str__(self):
+        return f'{self.price}'
 
 
 

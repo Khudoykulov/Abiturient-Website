@@ -33,3 +33,8 @@ class BlockTestAPIView(generics.ListCreateAPIView):
         if self.request.method == 'POST':
             return BlockTestPostSerializer
         return TestQuizSerializer
+
+
+class BlockTestRUPAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TestQuiz.objects.all()
+    serializer_class = TestQuizSerializer
