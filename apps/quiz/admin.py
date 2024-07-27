@@ -2,15 +2,6 @@ from django.contrib import admin
 # from .models import FirstSubject, SecondSubject, TestQuiz
 from .models import TestQuiz
 
-# @admin.register(FirstSubject)
-# class FirstSubject(admin.ModelAdmin):
-#     list_display = ['id', 'first_stage',]
-#
-#
-# @admin.register(SecondSubject)
-# class SecondSubject(admin.ModelAdmin):
-#     list_display = ['id', 'second_subject']
-
 
 @admin.register(TestQuiz)
 class TestQuiz(admin.ModelAdmin):

@@ -1,7 +1,5 @@
 import random
 from apps.quiz.models import TestQuiz
-from django.shortcuts import render
-from apps.subjects.mixins import CreateViewSetMixin
 from .serializers import (
     BalanceSerializer,
     MainTestSerializer,
@@ -29,28 +27,11 @@ class BalanceView(generics.ListCreateAPIView):
         return qs.none()
 
 
-# class MainTestAPIView1(generics.ListCreateAPIView):
-#     queryset = MainTest.objects.all()
-#     serializer_class = MainTestSerializer
-#     serializer_post_class = MainTestPostSerializer
-#
-#     def get_serializer_class(self):
-#         if self.request.method == 'POST':
-#             return MainTestPostSerializer
-#         return MainTestSerializer
-
-
-# class MainTestAPIView(CreateViewSetMixin, viewsets.ModelViewSet):
-#     model = MainTest
-#     queryset = MainTest.objects.all()
-#     serializer_class = MainTestSerializer
-#     serializer_post_class = MainTestPostSerializer
-
-
 class MainTestAPIView2(generics.ListCreateAPIView):
     queryset = MainTest.objects.all()
     serializer_class = MainTestSerializer
     serializer_post_class = MainTestPostSerializer
+    # permission_classes = [IsAuthor]
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -66,7 +47,8 @@ class MainTestAPIView2(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
         subject_id = self.kwargs.get('subject_id')
-        queryset = queryset.filter(main_test__subject_quiz_id=subject_id).all()
+        author_id = self.request.user.id
+        queryset = queryset.filter(main_test__subject_quiz_id=subject_id, author_id=author_id).all()
         return queryset
 
     def create(self, request, *args, **kwargs,):
@@ -93,19 +75,19 @@ class MainAnswerAPIView(generics.ListCreateAPIView):
     queryset = MainAnswerBlock.objects.all()
     serializer_class = MainAnswerBlockSerializer
     serializer_post_class = MainAnswerBlockPostSerializer
+    # permission_classes = [IsAuthor]
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return MainAnswerBlockPostSerializer
         return MainAnswerBlockSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        author_id = self.request.user.id
+        queryset = queryset.filter(block__author_id=author_id).all()
+        return queryset
+
 
 
 

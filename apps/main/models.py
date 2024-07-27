@@ -32,7 +32,10 @@ class MainTest(models.Model):
 
 
 class MainAnswerBlock(models.Model):
-    block = models.ForeignKey(MainTest, on_delete=models.CASCADE)
+    block = models.ForeignKey(MainTest, on_delete=models.CASCADE, related_name='block')
+
+    def block_author(self):
+        return self.block.author.email
 
     @property
     def correct_count(self):

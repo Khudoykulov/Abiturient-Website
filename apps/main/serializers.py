@@ -6,12 +6,12 @@ from ..quiz.models import TestQuiz
 from ..subjects.serializers import SubjectsSerializer, TestSubjectSerializer
 from apps.subjects.models import Tests, Answers
 
+
 class BalanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Portfolio
         fields = ['id', 'balance', 'total_balance',]
-
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -24,7 +24,7 @@ class MainTestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainTest
-        fields = ['id', 'main_test']
+        fields = ['id', 'main_test',]
 
 
 class MainTestPostSerializer(serializers.ModelSerializer):
@@ -32,9 +32,6 @@ class MainTestPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = MainTest
         fields = ['id',]
-
-    def create(self, validated_data):
-        return super().create(validated_data)
 
 
 class TestQuizAnswerSerializer(serializers.ModelSerializer):
@@ -73,7 +70,7 @@ class MainAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainAnswer
-        fields = ['quiz', 'answer']
+        fields = ['quiz', 'answer',]
 
 
 class MainAnswerBlockSerializer(serializers.ModelSerializer):
@@ -82,7 +79,7 @@ class MainAnswerBlockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainAnswerBlock
-        fields = ['id', 'block', 'main']
+        fields = ['id', 'block', 'main', 'correct_count', 'ball']
 
 
 class MainAnswerPostSerializer(serializers.ModelSerializer):

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .mixins import CreateViewSetMixin
-from .models import Subjects, Answers, Tests
+from .models import Subjects, Answers, Tests, Tag
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, status, permissions
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -9,7 +9,8 @@ from .serializers import (
     TestSerializer,
     TestPostSerializer,
     AnswerSerializer,
-    AnswerPostSerializer
+    AnswerPostSerializer,
+    TagSerializer
 )
 from rest_framework import viewsets, generics, status, permissions
 from .permissions import (
@@ -17,6 +18,11 @@ from .permissions import (
     IsAdminOrReadOnly
 )
 
+
+class TagAPIView(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subjects.objects.all()
@@ -41,7 +47,7 @@ class AnswerViewSet(CreateViewSetMixin, viewsets.ModelViewSet):
     model = Answers
     serializer_class = AnswerSerializer
     serializer_post_class = AnswerPostSerializer
-    # permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     search_fields = ['id', 'is_correct']
     filter_backends = (SearchFilter, DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['is_correct',]

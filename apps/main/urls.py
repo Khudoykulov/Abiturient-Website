@@ -11,6 +11,6 @@ router = DefaultRouter()
 
 urlpatterns = [
     path('balance/', BalanceView.as_view()),
-    path('subject/<int:subject_id>/', MainTestAPIView2.as_view()),
-    path('main_answer/', MainAnswerAPIView.as_view()),
+    path('block/<int:subject_id>/', MainTestAPIView2.as_view()),
+    path('block_answer/', MainAnswerAPIView.as_view()),
 ]

@@ -10,7 +10,6 @@ class Portfolio(admin.ModelAdmin):
 @admin.register(MainTest)
 class MainTestAdmin(admin.ModelAdmin):
     list_display = ['id', 'main_test', 'author']
-    # fields = ['main_test']
     search_fields = ('main_test',)
     autocomplete_fields = ('main_test',)
 
@@ -22,5 +21,5 @@ class TestInlineAdmin(admin.TabularInline):
 
 @admin.register(MainAnswerBlock)
 class MainAnswerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'block', 'correct_count', 'ball']
+    list_display = ['id', 'block_author', 'block', 'correct_count', 'ball']
     inlines = [TestInlineAdmin,]

@@ -158,6 +158,7 @@ LOCALE_PATHS = [
 
 MODELTRANSLATION_TRANSLATION_FILES = (
     'apps.subjects.translations',
+    'apps.quiz.translations',
 )
 
 # Static files (CSS, JavaScript, Images)
