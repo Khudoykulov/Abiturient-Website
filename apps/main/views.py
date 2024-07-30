@@ -27,7 +27,25 @@ class BalanceView(generics.ListCreateAPIView):
         return qs.none()
 
 
-class MainTestAPIView2(generics.ListCreateAPIView):
+class MainTestDetailAPIView2(generics.RetrieveAPIView):
+    queryset = MainTest.objects.all()
+    serializer_class = MainTestSerializer
+    # permission_classes = [IsAuthor]
+
+
+class MainTestListAPIView2(generics.ListAPIView):
+    queryset = MainTest.objects.all()
+    serializer_class = MainTestSerializer
+    # permission_classes = [IsAuthor]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        author_id = self.request.user.id
+        queryset = queryset.filter(author_id=author_id).all()
+        return queryset
+
+
+class MainTestAPIView2(generics.CreateAPIView):
     queryset = MainTest.objects.all()
     serializer_class = MainTestSerializer
     serializer_post_class = MainTestPostSerializer
@@ -44,17 +62,10 @@ class MainTestAPIView2(generics.ListCreateAPIView):
         ctx['subject_id'] = subject_id
         return ctx
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        subject_id = self.kwargs.get('subject_id')
-        author_id = self.request.user.id
-        queryset = queryset.filter(main_test__subject_quiz_id=subject_id, author_id=author_id).all()
-        return queryset
-
     def create(self, request, *args, **kwargs,):
         author = request.user
         subject_id = self.kwargs.get('subject_id')
-        main_test = TestQuiz.objects.filter(subject_quiz_id=subject_id).all()
+        main_test = TestQuiz.objects.filter(subject_quiz_id=subject_id, max_point=3.1).all()
         main_test_random = random.choice(main_test).id
         print(main_test_random, 'random')
         if subject_id is None:

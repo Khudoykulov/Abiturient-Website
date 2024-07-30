@@ -1,6 +1,6 @@
 from django.contrib import admin
-# from .models import FirstSubject, SecondSubject, TestQuiz
-from .models import TestQuiz, BlockTestPrice
+# from .models import FirstSubject, SecondSubject, TestQuiz,
+from .models import TestQuiz, BlockTestPrice, Mandatory
 
 
 @admin.register(TestQuiz)
@@ -14,3 +14,8 @@ class TestQuiz(admin.ModelAdmin):
 @admin.register(BlockTestPrice)
 class BlockTestPrice(admin.ModelAdmin):
     list_display = ['id', 'price']
+
+
+@admin.register(Mandatory)
+class BlockTestPrice(admin.ModelAdmin):
+    list_display = ['id', 'ona_tili', 'tarix', 'matematika']

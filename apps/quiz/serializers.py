@@ -2,7 +2,8 @@ from rest_framework import serializers
 from rest_framework.response import Response
 
 from .models import (
-    TestQuiz
+    TestQuiz,
+    Mandatory
 
 )
 from apps.subjects.models import Subjects, Tests, Answers
@@ -64,3 +65,38 @@ class BlockTestPostSerializer(serializers.ModelSerializer):
         return test_quiz_instance
 
 
+class MandatoryBlockPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mandatory
+        fields = ['id']
+
+    def create(self, validated_data):
+        test_quizzes_ona_tili = list(TestQuiz.objects.filter(subject_quiz__name='ona tili', max_point=1.1).all())
+        print(test_quizzes_ona_tili)
+        test_quizzes_matem = list(TestQuiz.objects.filter(subject_quiz__name='matematika', max_point=1.1).all())
+        print(test_quizzes_matem)
+        test_quizzes_tarix = list(TestQuiz.objects.filter(subject_quiz__name='tarix', max_point=1.1).all())
+        print(test_quizzes_tarix)
+
+        # Randomly select TestQuiz instances
+        ona_tili = random.choice(test_quizzes_ona_tili)
+        tarix = random.choice(test_quizzes_tarix)
+        matematika = random.choice(test_quizzes_matem)
+        mandatory = Mandatory.objects.create(
+            ona_tili=ona_tili,
+            tarix=tarix,
+            matematika=matematika
+        )
+
+        return mandatory
+
+
+class MandatoryBlockSerializer(serializers.ModelSerializer):
+    ona_tili = TestQuizSerializer()
+    tarix = TestQuizSerializer()
+    matematika = TestQuizSerializer()
+
+    class Meta:
+        model = Mandatory
+        fields = ['id', 'ona_tili', 'tarix', 'matematika']

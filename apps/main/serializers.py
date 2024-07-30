@@ -17,6 +17,7 @@ class BalanceSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         validated_data['author_id'] = request.user.id
+        user = request.user
         return super().create(validated_data)
 
 
@@ -99,30 +100,33 @@ class MainAnswerBlockPostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         main_data = validated_data.pop('main', [])
-        block = MainAnswerBlock.objects.create(**validated_data)
+
         user = self.context.get('user')
         user = user if user else None
         if user:
             # Foydalanuvchiga mos `Portfolio` obyektini olish
-            portfolio = Portfolio.objects.filter(author_id=user.id).first()
+            portfolio = Portfolio.objects.filter(author_id=user.id).order_by('-id')[0]
+            print(portfolio)
             if portfolio:
                 # Balansni olish
                 balance = portfolio.balance
 
                 # `BlockTestPrice` qiymatini olish (birinchi obyekt)
                 block_price = BlockTestPrice.objects.first().price
+                print(balance)
+                print(block_price)
 
                 # Balansni yangilash
                 if balance >= block_price:
                     portfolio.balance = balance - block_price
                     portfolio.save()
+                    block = MainAnswerBlock.objects.create(**validated_data)
+                    for main_item in main_data:
+                        MainAnswer.objects.create(main=block, **main_item)
                 else:
                     raise serializers.ValidationError("Balans yetarli emas.")
             else:
                 raise serializers.ValidationError("Portfolio topilmadi.")
-
-        for main_item in main_data:
-            MainAnswer.objects.create(main=block, **main_item)
         return block
 
 

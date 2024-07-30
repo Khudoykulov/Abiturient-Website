@@ -46,6 +46,7 @@ class MainAnswerBlock(models.Model):
     def ball(self):
         return self.correct_count * self.block.main_test.max_point
 
+
 class MainAnswer(models.Model):
     main = models.ForeignKey(MainAnswerBlock, on_delete=models.CASCADE, related_name='main')
     quiz = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='main_quiz')
@@ -53,4 +54,16 @@ class MainAnswer(models.Model):
     # modified_date = models.DateTimeField(auto_now=True)
     # created_date = models.DateTimeField(auto_now_add=True)
 
+
+class BlockMainTest5(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE,)
+    first_subject = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='first_subject',)
+    second_subject = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='second_subject',)
+    mandatory_subject = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='mandatory_subject',)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return (f'{self.first_subject.subject_quiz.name} ->3.1 {self.second_subject.subject_quiz.name} -> 2.1 '
+                f'{self.mandatory_subject.subject_quiz.name} -> 1.1')
 

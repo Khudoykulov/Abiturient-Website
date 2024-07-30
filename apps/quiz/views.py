@@ -10,10 +10,13 @@ from rest_framework import generics, viewsets
 from .serializers import (
     TestQuizSerializer,
     TestQuizPostSerializer,
-    BlockTestPostSerializer
+    BlockTestPostSerializer,
+    MandatoryBlockSerializer,
+    MandatoryBlockPostSerializer,
 )
 from .models import (
     TestQuiz,
+    Mandatory
 )
 
 
@@ -38,3 +41,14 @@ class BlockTestAPIView(generics.ListCreateAPIView):
 class BlockTestRUPAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = TestQuiz.objects.all()
     serializer_class = TestQuizSerializer
+
+
+class MandatoryBlockAPIView(generics.CreateAPIView):
+    queryset = Mandatory.objects.all()
+    serializer_class = MandatoryBlockPostSerializer
+
+
+class MandatoryBlockRUDAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Mandatory.objects.all()
+    serializer_class = MandatoryBlockSerializer
+

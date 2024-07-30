@@ -21,8 +21,8 @@ class Subjects(models.Model):
 
 class Tests(models.Model):
     UNIT = (
-        (3.1, 'difficult'),
-        (2.1, 'easy')
+        (3.1 or 2.1, 'difficult'),
+        (1.1, 'easy')
     )
     subject = models.ForeignKey(Subjects, on_delete=models.CASCADE, related_name='subject')
     level = models.FloatField(choices=UNIT, default=3.1)
