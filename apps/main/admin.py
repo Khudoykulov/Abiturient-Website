@@ -10,7 +10,7 @@ class Portfolio(admin.ModelAdmin):
 
 @admin.register(MainTest)
 class MainTestAdmin(admin.ModelAdmin):
-    list_display = ['id', 'main_test', 'author']
+    list_display = ['id', 'main_test', 'author', 'created_date']
     search_fields = ('main_test',)
     autocomplete_fields = ('main_test',)
 

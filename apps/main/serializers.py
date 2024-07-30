@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock
+from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5
 from django.core.exceptions import ValidationError
 from apps.quiz.serializers import TestQuizSerializer
 from ..quiz.models import TestQuiz
@@ -130,6 +130,16 @@ class MainAnswerBlockPostSerializer(serializers.ModelSerializer):
         return block
 
 
+class BlockTestFirstPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MainTest
+        fields = ['id',]
 
 
+class BlockTestSecondPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MainTest
+        fields = ['id',]
 

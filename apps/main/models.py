@@ -1,9 +1,11 @@
+from django.utils import timezone
+
 from django.db import models
 from apps.account.models import User
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from apps.quiz.models import TestQuiz
+from apps.quiz.models import TestQuiz, Mandatory
 from apps.subjects.models import Tests, Answers
 
 
@@ -23,6 +25,7 @@ class Portfolio(models.Model):
 class MainTest(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,)
     main_test = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='main_test',)
+    created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.main_test.subject_quiz.name} --> {self.id}'
@@ -51,15 +54,15 @@ class MainAnswer(models.Model):
     main = models.ForeignKey(MainAnswerBlock, on_delete=models.CASCADE, related_name='main')
     quiz = models.ForeignKey(Tests, on_delete=models.CASCADE, related_name='main_quiz')
     answer = models.ForeignKey(Answers, on_delete=models.CASCADE)
-    # modified_date = models.DateTimeField(auto_now=True)
-    # created_date = models.DateTimeField(auto_now_add=True)
+        # modified_date = models.DateTimeField(auto_now=True)
+        # created_date = models.DateTimeField(auto_now_add=True)
 
 
 class BlockMainTest5(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,)
     first_subject = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='first_subject',)
     second_subject = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='second_subject',)
-    mandatory_subject = models.ForeignKey(TestQuiz, on_delete=models.CASCADE, related_name='mandatory_subject',)
+    mandatory_subject = models.ForeignKey(Mandatory, on_delete=models.CASCADE, related_name='mandatory_subject',)
     modified_date = models.DateTimeField(auto_now=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
