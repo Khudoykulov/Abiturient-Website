@@ -41,7 +41,8 @@ class BLockTest5InlineAdmin(admin.TabularInline):
 
 @admin.register(MainAnswerBlock5)
 class MainAnswerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'block_author', 'block', 'correct_count', 'ball']
+    list_display = ['id', 'block_author', 'block', 'first_subject_correct_count',
+                    'second_subject_correct_count', 'mandatory_subject_correct_count', 'ball']
     inlines = [BLockTest5InlineAdmin,]
 
 

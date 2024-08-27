@@ -7,10 +7,11 @@ from .serializers import (
     MainAnswerBlockSerializer,
     MainAnswerBlockPostSerializer,
     BlockTestFirstPostSerializer,
-    BlockTestSecondPostSerializer, BlockMainTest5Serializer, BlockMainTest5PostSerializer
+    BlockTestSecondPostSerializer, BlockMainTest5Serializer, BlockMainTest5PostSerializer,
+    MainAnswerBlock5PostSerializer
 )
 
-from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5
+from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5, MainAnswerBlock5
 from rest_framework import generics, viewsets, status
 from .permissions import IsAuthor
 from rest_framework.response import Response
@@ -163,3 +164,27 @@ class BlockMainTest5View(generics.CreateAPIView):
 class BlockMainTest5RUDView(generics.RetrieveDestroyAPIView):
     queryset = BlockMainTest5
     serializer_class = BlockMainTest5Serializer
+
+
+class MainAnswerBlock5APIView(generics.ListCreateAPIView):
+    queryset = MainAnswerBlock5.objects.all()
+    serializer_class = MainAnswerBlockSerializer
+    serializer_post_class = MainAnswerBlock5PostSerializer
+    # permission_classes = [IsAuthor]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return MainAnswerBlock5PostSerializer
+        return MainAnswerBlockSerializer
+
+    def get_serializer_context(self):
+        user = self.request.user
+        ctx = super().get_serializer_context()
+        ctx['user'] = user
+        return ctx
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        author_id = self.request.user.id
+        queryset = queryset.filter(block__author_id=author_id).all()
+        return queryset

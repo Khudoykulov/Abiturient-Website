@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5
+from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5, MainAnswerBlock5, MainAnswer5
 from django.core.exceptions import ValidationError
 from apps.quiz.serializers import TestQuizSerializer, MandatoryBlockSerializer
 from ..quiz.models import TestQuiz
@@ -159,4 +159,50 @@ class BlockMainTest5PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlockMainTest5
         fields = ['id', 'first_subject', 'second_subject',]
+
+
+class MainAnswer5PostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MainAnswer5
+        fields = ['id', 'quiz', 'answer']
+
+
+class MainAnswerBlock5PostSerializer(serializers.ModelSerializer):
+    block_test = MainAnswer5PostSerializer(many=True,)
+
+    class Meta:
+        model = MainAnswerBlock5
+        fields = ['id', 'block', 'block_test']
+
+    def create(self, validated_data):
+        main_data = validated_data.pop('block_test', [])
+
+        user = self.context.get('user')
+        user = user if user else None
+        if user:
+            # Foydalanuvchiga mos `Portfolio` obyektini olish
+            portfolio = Portfolio.objects.filter(author_id=user.id).order_by('-id')[0]
+            print(portfolio)
+            if portfolio:
+                # Balansni olish
+                balance = portfolio.balance
+
+                # `BlockTestPrice` qiymatini olish (birinchi obyekt)
+                block_price = BlockTestPrice.objects.first().price
+                print(balance)
+                print(block_price)
+
+                # Balansni yangilash
+                if balance >= block_price:
+                    portfolio.balance = balance - block_price
+                    portfolio.save()
+                    block = MainAnswerBlock5.objects.create(**validated_data)
+                    for main_item in main_data:
+                        MainAnswer5.objects.create(block_test=block, **main_item)
+                else:
+                    raise serializers.ValidationError("Balans yetarli emas.")
+            else:
+                raise serializers.ValidationError("Portfolio topilmadi.")
+        return block
 

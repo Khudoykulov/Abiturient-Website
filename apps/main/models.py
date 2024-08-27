@@ -81,17 +81,37 @@ class MainAnswerBlock5(models.Model):
         return self.block.author.email
 
     @property
-    def correct_count(self):
-        answers = self.main.all().values_list('answer__is_correct', flat=True)
+    def first_subject_correct_count(self):
+        first_subject_name = BlockMainTest5.objects.filter(id=self.block.id)[0].first_subject.subject_quiz.name
+        answers = self.block_test.filter(quiz__subject__name=first_subject_name, answer__is_correct=True,
+                                         answer__test__level=3.1).all()
+        correct_count = sum(1 for is_correct in answers if is_correct)
+        return correct_count
+
+    @property
+    def second_subject_correct_count(self):
+        second_subject_name = BlockMainTest5.objects.filter(id=self.block.id)[0].second_subject.subject_quiz.name
+        answers = self.block_test.filter(quiz__subject__name=second_subject_name, answer__is_correct=True,
+                                         answer__test__level=3.1).all()
+        correct_count = sum(1 for is_correct in answers if is_correct)
+        return correct_count
+
+    @property
+    def mandatory_subject_correct_count(self):
+        answers = self.block_test.filter(answer__test__level=1.1, answer__is_correct=True).all()
         correct_count = sum(1 for is_correct in answers if is_correct)
         return correct_count
 
     def ball(self):
-        return self.correct_count * self.block.main_test.max_point
+        # return self.correct_count * self.block.first_subject.max_point
+        return ((self.first_subject_correct_count * 3.1) +
+                (self.second_subject_correct_count * 2.1) +
+                (self.mandatory_subject_correct_count * 1.1)
+                )
 
 
 class MainAnswer5(models.Model):
-    main = models.ForeignKey(MainAnswerBlock5, on_delete=models.CASCADE,)
+    block_test = models.ForeignKey(MainAnswerBlock5, on_delete=models.CASCADE, related_name='block_test')
     quiz = models.ForeignKey(Tests, on_delete=models.CASCADE,)
     answer = models.ForeignKey(Answers, on_delete=models.CASCADE)
     modified_date = models.DateTimeField(auto_now=True)
