@@ -24,11 +24,11 @@ class TestQuizSerializer(serializers.ModelSerializer):
         fields = ['id', 'subject_quiz', 'test_quiz', 'max_point']
 
 
-class TestQuizPostSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = TestQuiz
-        fields = ['id', 'subject_quiz', 'test_quiz', 'max_point']
+# class TestQuizPostSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = TestQuiz
+#         fields = ['id', 'subject_quiz', 'test_quiz', 'max_point']
 
 
 class BlockTestPostSerializer(serializers.ModelSerializer):

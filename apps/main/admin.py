@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5
+from .models import (
+    Portfolio,
+    MainTest,
+    MainAnswer,
+    MainAnswerBlock,
+    BlockMainTest5,
+    MainAnswer5,
+    MainAnswerBlock5
+)
 from apps.subjects.models import Tests
 
 
@@ -26,12 +34,17 @@ class MainAnswerAdmin(admin.ModelAdmin):
     inlines = [TestInlineAdmin,]
 
 
-# class BLockTest5InlineAdmin(admin.TabularInline):
-#     model = MainAnswer
-#     extra = 0
+class BLockTest5InlineAdmin(admin.TabularInline):
+    model = MainAnswer5
+    extra = 0
+
+
+@admin.register(MainAnswerBlock5)
+class MainAnswerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'block_author', 'block', 'correct_count', 'ball']
+    inlines = [BLockTest5InlineAdmin,]
 
 
 @admin.register(BlockMainTest5)
 class MainAnswerAdmin(admin.ModelAdmin):
     list_display = ['id', 'author', 'first_subject', 'second_subject', 'mandatory_subject']
-    # inlines = [TestInlineAdmin,]

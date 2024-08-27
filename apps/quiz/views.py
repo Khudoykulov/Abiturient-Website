@@ -9,7 +9,7 @@ from apps.subjects.mixins import CreateViewSetMixin
 from rest_framework import generics, viewsets
 from .serializers import (
     TestQuizSerializer,
-    TestQuizPostSerializer,
+    # TestQuizPostSerializer,
     BlockTestPostSerializer,
     MandatoryBlockSerializer,
     MandatoryBlockPostSerializer,
@@ -20,11 +20,11 @@ from .models import (
 )
 
 
-class TestQuizAPIView(CreateViewSetMixin, viewsets. ModelViewSet):
-    model = TestQuiz
-    queryset = TestQuiz.objects.all()
-    serializer_class = TestQuizSerializer
-    serializer_post_class = TestQuizPostSerializer
+# class TestQuizAPIView(CreateViewSetMixin, viewsets. ModelViewSet):
+#     model = TestQuiz
+#     queryset = TestQuiz.objects.all()
+#     serializer_class = TestQuizSerializer
+#     serializer_post_class = TestQuizPostSerializer
 
 
 class BlockTestAPIView(generics.ListCreateAPIView):

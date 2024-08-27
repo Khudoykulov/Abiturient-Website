@@ -67,6 +67,32 @@ class BlockMainTest5(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return (f'{self.first_subject.subject_quiz.name} ->3.1 {self.second_subject.subject_quiz.name} -> 2.1 '
-                f'{self.mandatory_subject.subject_quiz.name} -> 1.1')
+        return (f'{self.first_subject.subject_quiz.name} ->3.1 '
+                f'{self.second_subject.subject_quiz.name} -> 2.1 '
+                f'{self.mandatory_subject.ona_tili.subject_quiz.name},'
+                f'{self.mandatory_subject.matematika.subject_quiz.name}, '
+                f'{self.mandatory_subject.tarix.subject_quiz.name} -> 1.1')
 
+
+class MainAnswerBlock5(models.Model):
+    block = models.ForeignKey(BlockMainTest5, on_delete=models.CASCADE,)
+
+    def block_author(self):
+        return self.block.author.email
+
+    @property
+    def correct_count(self):
+        answers = self.main.all().values_list('answer__is_correct', flat=True)
+        correct_count = sum(1 for is_correct in answers if is_correct)
+        return correct_count
+
+    def ball(self):
+        return self.correct_count * self.block.main_test.max_point
+
+
+class MainAnswer5(models.Model):
+    main = models.ForeignKey(MainAnswerBlock5, on_delete=models.CASCADE,)
+    quiz = models.ForeignKey(Tests, on_delete=models.CASCADE,)
+    answer = models.ForeignKey(Answers, on_delete=models.CASCADE)
+    modified_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True)

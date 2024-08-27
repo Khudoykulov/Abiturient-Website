@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Portfolio, MainTest, MainAnswer, MainAnswerBlock, BlockMainTest5
 from django.core.exceptions import ValidationError
-from apps.quiz.serializers import TestQuizSerializer
+from apps.quiz.serializers import TestQuizSerializer, MandatoryBlockSerializer
 from ..quiz.models import TestQuiz
 from ..subjects.serializers import SubjectsSerializer, TestSubjectSerializer
 from apps.subjects.models import Tests, Answers
@@ -142,4 +142,21 @@ class BlockTestSecondPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = MainTest
         fields = ['id',]
+
+
+class BlockMainTest5Serializer(serializers.ModelSerializer):
+    first_subject = TestQuizSerializer(read_only=True)
+    second_subject = TestQuizSerializer(read_only=True)
+    mandatory_subject = MandatoryBlockSerializer(read_only=True)
+
+    class Meta:
+        model = BlockMainTest5
+        fields = ['id', 'first_subject', 'second_subject', 'mandatory_subject',
+                  'modified_date', 'created_date']
+
+
+class BlockMainTest5PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlockMainTest5
+        fields = ['id', 'first_subject', 'second_subject',]
 
